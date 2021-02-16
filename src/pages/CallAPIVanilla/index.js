@@ -1,34 +1,87 @@
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Button, Image} from 'react-native';
 
 const CallAPIVanilla = () => {
+  const [dataUsers, setDataUsers] = useState ({
+    avatar: '',
+    fist_name: '',
+    last_name: '',
+    email: '',
+  });
+
+  const [dataJobs, setDataJobs] = useState ({
+    name: '',
+    job: ''
+  });
+
   useEffect(() => {
-      //Call API with GET
+    //Call API with GET
+    // fetch('https://reqres.in/api/users/2')
+    //   .then((response) => response.json())
+    //   .then((json) => console.log(json));
+    //Call API with POST
+    //https://reqres.in/api/users
+    // const dataForAPI = {
+    //   name: 'morpheus',
+    //   job: 'leader',
+    // };
+    // fetch('https://reqres.in/api/users', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-type': 'application/json',
+    //   },
+    //   body: JSON.stringify(dataForAPI),
+    // })
+    //   .then((response) => response.json())
+    //   .then((json) => console.log('post respon: ', json));
+  }, []);
+
+  const getData = () => {
     fetch('https://reqres.in/api/users/2')
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((json) => {
+          console.log(json)
+          setDataUsers(json.data)
+        })
+  };
 
-      //Call API with POST
-     //https://reqres.in/api/users
-     const dataForAPI = {
-        name: "morpheus",
-        job: "leader"
-    }
-     fetch('https://reqres.in/api/users', {
-         method: 'POST',
-         headers: {
-             'Content-type': 'application/json'
-         },
-         body: JSON.stringify(dataForAPI)
-     })
-     .then((response) => response.json())
-     .then((json) => console.log('post respon: ', json));
-      
-  }, []);
+  const postData = () => {
+      const dataForAPI = {
+      name: 'morpheus',
+      job: 'leader',
+    };
+
+    fetch('https://reqres.in/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(dataForAPI),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+          console.log('post respon: ', json)
+          setDataJobs(json)
+        })
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Hallo World ...</Text>
+      <Button title="GET DATA" onPress={getData} />
+
+      <Text>Respon GET DATA</Text>
+      <Image source={{uri: dataUsers.avatar}} style={styles.avatar} />
+      <Text>{`${dataUsers.fist_name} ${dataUsers.last_name}`}</Text>
+      <Text>{dataUsers.email}</Text>
+      <View style={styles.line} />
+
+      <Button title="POST DATA" onPress={postData} />
+      <View style={styles.get}>
+        <Text>Respon POST DATA</Text>
+        <Text>{dataJobs.name}</Text>
+        <Text>{dataJobs.job}</Text>
+      </View>
     </View>
   );
 };
@@ -41,5 +94,16 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
+    paddingBottom: 10,
+  },
+  line: {
+    height: 2,
+    backgroundColor: '#000',
+    marginVertical: 15,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
 });
